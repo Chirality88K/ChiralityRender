@@ -6,7 +6,7 @@
 #include <memory>
 #include <fstream>
 #include "GL/glew.h"
-#include "glm.hpp"
+#include "../glm/glm.hpp"
 #include "Material.h"
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"

@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 #include "GL/glew.h"
-#include "glm.hpp"
+#include "../glm/glm.hpp"
 #include "Shader.h"
 
 class Camera

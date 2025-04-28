@@ -2,7 +2,7 @@
 #define MATERIAL_H
 #include <string>
 #include "GL/glew.h"
-#include "glm.hpp"
+#include "../glm/glm.hpp"
 #include "Shader.h"
 
 

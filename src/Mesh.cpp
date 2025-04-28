@@ -1,9 +1,9 @@
-#include "Mesh.h"
+#include "../inc/Mesh.h"
 #include <iostream>
 #include <filesystem>
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#include "Log.h"
+#include "../inc/stb_image.h"
+#include "../inc/Log.h"
 
 static int name = 0;
 

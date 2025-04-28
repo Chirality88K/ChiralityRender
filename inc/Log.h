@@ -2,7 +2,6 @@
 #include <chrono>
 #include <iomanip>
 
-#ifdef _DEBUG
 #define LOG_INFO(msg) { \
     auto now = std::chrono::system_clock::now(); \
     auto duration = now.time_since_epoch(); \
@@ -24,6 +23,5 @@
     std::cout << "[" << std::put_time(&time_tm, "%Y-%m-%d %H:%M:%S") << "." << std::setw(3) << std::setfill('0') << (milliseconds % 1000) << "] " \
               << " " << __FILE__ << ":" << __LINE__ << " (" << __FUNCTION__ << ") - " <<"\n[ERROR] "<< msg << std::endl; \
 }
-#else
+
 #define LOG_DEBUG(msg)
-#endif

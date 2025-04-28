@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "../inc/Camera.h"
 static const double PI = 3.141592653589793238;
 
 Camera::Camera(glm::vec3 p, float a1, float a2)

@@ -1,5 +1,5 @@
-#include "Scene.h"
-#include "Log.h"
+#include "../inc/Scene.h"
+#include "../inc/Log.h"
 
 Scene::Scene(std::string name)
 {
@@ -26,6 +26,8 @@ bool Scene::Initialize()
 
 void Scene::BeginRender()
 {
+	glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPos(mWindow, mWidth / 2, mHeight / 2);
 	while (!glfwWindowShouldClose(mWindow)) {
 		glUseProgram(mProgramID);
 		double xpos, ypos;
@@ -112,9 +114,9 @@ bool Scene::WindowsInit()
 		return false;
 	}
 	glfwMakeContextCurrent(mWindow);
-	glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glewInit();
-	glfwSetCursorPos(mWindow, mWidth / 2, mHeight / 2);
+	//glfwSetCursorPos(mWindow, mWidth / 2, mHeight / 2);
 	mLastMousePoint[0] = mWidth / 2;
 	mLastMousePoint[1] = mHeight / 2;
 	LOG_INFO("Succeed to create GLFW window: " + mName);

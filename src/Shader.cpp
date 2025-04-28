@@ -1,9 +1,9 @@
-#include "Shader.h"
+#include "../inc/Shader.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "Log.h"
+#include "../inc/Log.h"
 
 #define THROWERROR(a,b) if(a==-1){LOG_ERROR("Fail to set uniform: "+b);\
 throw("Fail to set uniform: " + b); }

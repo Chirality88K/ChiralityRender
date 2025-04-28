@@ -1,7 +1,5 @@
-#include "Light.h"
-#include <GLFW/glfw3.h>
 #include <iostream>
-#include "Scene.h"
+#include "inc/Scene.h"
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {

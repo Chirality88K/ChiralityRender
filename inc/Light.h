@@ -1,7 +1,7 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 #include "Shader.h"
-#include "glm.hpp"
+#include "../glm/glm.hpp"
 #include "Log.h"
 
 class Light {
@@ -63,6 +63,7 @@ public:
 	}
 	void DebugInfo()const override
 	{
+		#ifdef _DEBUG
 		std::string info;
 		info = "Type of the light: POINT LIGHT\n";
 		info += "Name of the light: " + GetName() + "\n";
@@ -74,6 +75,7 @@ public:
 			+ " " + std::to_string(color.w) + "\n";
 		info += "Cover distance: " + std::to_string(mCoverDistance) + "\n";
 		LOG_INFO(info);
+		#endif
 	}
 private:
 	glm::vec3 mPosition;
@@ -107,6 +109,7 @@ public:
 	}
 	void DebugInfo()const override
 	{
+		#ifdef _DEBUG
 		std::string info;
 		info = "Type of the light: PARALLEL LIGHT\n";
 		info += "Name of the light: " + GetName() + "\n";
@@ -117,6 +120,7 @@ public:
 			std::to_string(color.y) + " " + std::to_string(color.z)
 			+ " " + std::to_string(color.w);
 		LOG_INFO(info);
+		#endif
 	}
 private:
 	glm::vec3 mDirection;
