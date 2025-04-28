@@ -8,9 +8,9 @@
 #include "GL/glew.h"
 #include "glm.hpp"
 #include "Material.h"
-#include "../assimp_inc/Importer.hpp"
-#include "../assimp_inc/scene.h"
-#include "../assimp_inc/postprocess.h"
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
 
 class Vertex
 {

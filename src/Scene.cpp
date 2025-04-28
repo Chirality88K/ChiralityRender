@@ -132,7 +132,7 @@ void Scene::CreateShaders()
 void Scene::CreateModels()
 {
 	std::shared_ptr<Model> test_cube_model = std::make_shared<Model>();
-	test_cube_model->LoadModel("E:/C++code/OpenGL_Window_Constrct/Resources/tree/3d66.com_17439735.obj");
+	test_cube_model->LoadModel("Resources/tree/3d66.com_17439735.obj");
 	mModelList["Tree"] = test_cube_model;
 	LOG_INFO("Create model: Tree");
 }
