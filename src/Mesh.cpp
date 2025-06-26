@@ -7,7 +7,7 @@
 
 static int name = 0;
 
-Mesh::Mesh(const std::string& name, const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<TexturePicture>& textures)
+Mesh::Mesh(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, const std::vector<TexturePicture> &textures)
 {
     mName = name;
     std::string info;
@@ -17,10 +17,23 @@ Mesh::Mesh(const std::string& name, const std::vector<Vertex>& vertices, const s
         info = "Number of vertices is ZERO!!!!!!";
         LOG_ERROR(info);
     }
-    else 
+    else
     {
         info = "Load vertices of mesh, number of vertices: ";
         LOG_INFO(info + std::to_string(vertices.size()));
+        double size[6] = {vertices[0].mPosition.x, vertices[0].mPosition.x,
+                          vertices[0].mPosition.y, vertices[0].mPosition.y,
+                          vertices[0].mPosition.z, vertices[0].mPosition.z};
+        for (const Vertex &v : vertices)
+        {
+            size[0] = (std::min)(size[0], double(v.mPosition.x));
+            size[1] = (std::max)(size[1], double(v.mPosition.x));
+            size[2] = (std::max)(size[2], double(v.mPosition.y));
+            size[3] = (std::min)(size[3], double(v.mPosition.y));
+            size[4] = (std::max)(size[4], double(v.mPosition.z));
+            size[5] = (std::min)(size[5], double(v.mPosition.z));
+        }
+        mBox.SetBox(size[0], size[1], size[2], size[3], size[4], size[5]);
     }
     mIndices = indices;
     if (indices.size() == 0)
@@ -28,7 +41,7 @@ Mesh::Mesh(const std::string& name, const std::vector<Vertex>& vertices, const s
         info = "Number of indices is ZERO!!!!!!";
         LOG_ERROR(info);
     }
-    else 
+    else
     {
         info = "Load indices of mesh, number of indices: ";
         LOG_INFO(info + std::to_string(indices.size()));
@@ -42,7 +55,7 @@ Mesh::Mesh(const std::string& name, const std::vector<Vertex>& vertices, const s
     else
     {
         info = "Load textures \n";
-        for (const auto& t : textures)
+        for (const auto &t : textures)
         {
             info += t.mType + " " + t.mPath + "\n";
         }
@@ -57,8 +70,8 @@ void Mesh::BindVertexBuffer()
     glGenBuffers(1, &mEBO);
     unsigned int count_v = mVertices.size();
     unsigned int count_i = mIndices.size();
-    const Vertex* vertices = mVertices.data();
-    const uint32_t* indices = mIndices.data();
+    const Vertex *vertices = mVertices.data();
+    const uint32_t *indices = mIndices.data();
 
     glBindVertexArray(mVAO);
     glBindBuffer(GL_ARRAY_BUFFER, mVBO);
@@ -69,15 +82,15 @@ void Mesh::BindVertexBuffer()
     LOG_INFO("Succeed to upload " + std::to_string(count_i) + " indices");
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-        (void*)0);
+                          (void *)0);
     LOG_INFO("Succeed to bind vertices");
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-        (void*)(3 * sizeof(float)));
+                          (void *)(3 * sizeof(float)));
     LOG_INFO("Succeed to bind normal vectors");
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 
-        (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                          (void *)(6 * sizeof(float)));
     LOG_INFO("Succeed to bind texture coords");
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -89,11 +102,11 @@ void Mesh::BindTextureBuffer()
     stbi_set_flip_vertically_on_load(true);
     std::string info;
     std::string real_path;
-    for (auto& t : mTexture)
+    for (auto &t : mTexture)
     {
-        //std::filesystem::path currpath = std::filesystem::current_path();
-        real_path = "Resources/" + t.mPath;
-        unsigned char* data = stbi_load(real_path.c_str(), &width, &height, &nrChannels, 0);
+        // std::filesystem::path currpath = std::filesystem::current_path();
+        real_path = mPath + t.mPath;
+        unsigned char *data = stbi_load(real_path.c_str(), &width, &height, &nrChannels, 0);
         if (data == nullptr)
         {
             info = "Fail to load texture: ";
@@ -121,21 +134,21 @@ void Mesh::Draw(unsigned int program) const
     {
         mADS_Material->SetMaterial(program);
     }
-    for (const auto& t : mTexture)
+    for (const auto &t : mTexture)
     {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, t.mID);
         glUniform1i(glGetUniformLocation(program, "ourTexture"), 0);
     }
     glBindVertexArray(mVAO);
-    glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, (void*)0);
+    glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, (void *)0);
     glBindVertexArray(0);
 }
 
-void Model::LoadModel(const std::string& path)
+void Model::LoadModel(const std::string &path)
 {
     Assimp::Importer import;
-    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
     std::string info;
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
@@ -150,7 +163,7 @@ void Model::LoadModel(const std::string& path)
     LOG_INFO(info);
 }
 
-void Model::processNode(aiNode* node, const aiScene* scene)
+void Model::processNode(aiNode *node, const aiScene *scene)
 {
     if (node == nullptr || scene == nullptr)
     {
@@ -160,9 +173,10 @@ void Model::processNode(aiNode* node, const aiScene* scene)
     std::string name_of_mesh;
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
     {
-        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+        aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
         std::unique_ptr<Mesh> meshptr = processMesh(mesh, scene);
         name_of_mesh = meshptr->GetName();
+        mBox = Box::Union(mBox, meshptr->GetBox());
         mMeshLists[name_of_mesh] = std::move(meshptr);
         info = "Succeed to add mesh " + name_of_mesh + " to model " + mName;
         LOG_INFO(info);
@@ -173,7 +187,7 @@ void Model::processNode(aiNode* node, const aiScene* scene)
     }
 }
 
-std::vector<TexturePicture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+std::vector<TexturePicture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
 {
     std::vector<TexturePicture> textures;
     if (mat == nullptr)
@@ -188,18 +202,30 @@ std::vector<TexturePicture> loadMaterialTextures(aiMaterial* mat, aiTextureType 
         TexturePicture texture;
         texture.mID = 0;
         texture.mType = typeName;
-        texture.mPath = str.C_Str();
+        std::string s = str.C_Str();
+        for (size_t i = 0; i < s.size(); ++i)
+        {
+            if (s[i] == '\\')
+            {
+                texture.mPath += '/';
+            }
+            else
+            {
+                texture.mPath += s[i];
+            }
+        }
+
         textures.push_back(texture);
     }
     return textures;
 }
 
-std::unique_ptr<Mesh> Model:: processMesh(aiMesh* mesh, const aiScene* scene)
+std::unique_ptr<Mesh> Model::processMesh(aiMesh *mesh, const aiScene *scene)
 {
-    std::vector <Vertex> vertices;
+    std::vector<Vertex> vertices;
     vertices.reserve(mesh->mNumVertices);
-    std::vector <unsigned int> indices;
-    std::vector <TexturePicture> textures;
+    std::vector<unsigned int> indices;
+    std::vector<TexturePicture> textures;
     ADS_Material adsm("material0");
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -217,7 +243,7 @@ std::unique_ptr<Mesh> Model:: processMesh(aiMesh* mesh, const aiScene* scene)
         }
         vertices.push_back(vertex);
     }
-    
+
     for (unsigned int i = 0; i < mesh->mNumFaces; i++)
     {
         aiFace face = mesh->mFaces[i];
@@ -228,16 +254,16 @@ std::unique_ptr<Mesh> Model:: processMesh(aiMesh* mesh, const aiScene* scene)
     }
     if (mesh->mMaterialIndex >= 0)
     {
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
         std::vector<TexturePicture> diffuseMaps = loadMaterialTextures(material,
-            aiTextureType_DIFFUSE, "texture_diffuse");
+                                                                       aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         std::vector<TexturePicture> specularMaps = loadMaterialTextures(material,
-            aiTextureType_SPECULAR, "texture_specular");
+                                                                        aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         aiColor4D color;
 
-        if (aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &color) == AI_SUCCESS) 
+        if (aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &color) == AI_SUCCESS)
         {
             adsm.mDiffuse = glm::vec4(color.r, color.g, color.b, color.a);
         }
@@ -255,6 +281,7 @@ std::unique_ptr<Mesh> Model:: processMesh(aiMesh* mesh, const aiScene* scene)
         }
     }
     std::unique_ptr<Mesh> mesh_ptr = std::make_unique<Mesh>(mesh->mName.C_Str(), vertices, indices, textures);
+    mesh_ptr->SetPath(mPath);
     mesh_ptr->BindVertexBuffer();
     mesh_ptr->BindTextureBuffer();
     mesh_ptr->SetMaterial(std::make_shared<ADS_Material>(adsm));
@@ -263,7 +290,7 @@ std::unique_ptr<Mesh> Model:: processMesh(aiMesh* mesh, const aiScene* scene)
 
 void Model::Draw(unsigned int program) const
 {
-    for (const auto& it : mMeshLists)
+    for (const auto &it : mMeshLists)
     {
         it.second->Draw(program);
     }

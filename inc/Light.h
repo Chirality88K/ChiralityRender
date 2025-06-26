@@ -91,7 +91,7 @@ public:
 	ParallelLight(const std::string& name, glm::vec4 color, glm::vec3 direction)
 		:Light(name,color)
 	{
-		name; mDirection = glm::normalize(direction);
+		mDirection = glm::normalize(direction);
 	}
 	ParallelLight(const std::string& name, glm::vec3 direction)
 		:Light(name)

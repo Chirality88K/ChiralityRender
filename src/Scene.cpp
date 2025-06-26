@@ -27,8 +27,9 @@ bool Scene::Initialize()
 void Scene::BeginRender()
 {
 	glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetCursorPos(mWindow, mWidth / 2, mHeight / 2);
-	while (!glfwWindowShouldClose(mWindow)) {
+	glfwSetCursorPos(mWindow, double(mWidth) / 2, double(mHeight) / 2);
+	while (!glfwWindowShouldClose(mWindow))
+	{
 		glUseProgram(mProgramID);
 		double xpos, ypos;
 		glfwGetCursorPos(mWindow, &xpos, &ypos);
@@ -41,7 +42,7 @@ void Scene::BeginRender()
 		glClearColor(135.0f / 256.0f, 206.0f / 256.0f, 235.0f / 256.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
-		for (const auto& item : mRenderItemList)
+		for (const auto &item : mRenderItemList)
 		{
 			item.second->Draw(mProgramID);
 		}
@@ -55,16 +56,18 @@ Scene::~Scene()
 	glfwTerminate();
 }
 
-bool Scene::LinkShader()const
+bool Scene::LinkShader() const
 {
-	for (const auto& it : mShaderList) {
+	for (const auto &it : mShaderList)
+	{
 		it.second.AttachShader(mProgramID);
 	}
 	glLinkProgram(mProgramID);
 	int success;
 	char infoLog[512];
 	glGetProgramiv(mProgramID, GL_LINK_STATUS, &success);
-	if (!success) {
+	if (!success)
+	{
 		glGetProgramInfoLog(mProgramID, 512, NULL, infoLog);
 		LOG_ERROR("Fail to link shaders: " + std::string(infoLog));
 		return false;
@@ -76,7 +79,7 @@ bool Scene::LinkShader()const
 void Scene::UpdateScene()
 {
 	mCamera.Update(mProgramID);
-	for (const auto& light : mLightList)
+	for (const auto &light : mLightList)
 	{
 		light->AddLight(mProgramID);
 	}
@@ -92,9 +95,9 @@ void Scene::UpdateScene()
 		mTimeKnot = mCurrentTime;
 	}
 	float speed = 0.7f;
-	for (const auto& item : mRenderItemList)
+	for (const auto &item : mRenderItemList)
 	{
-		//item.second->UpdateRenderItem(glm::rotate(item.second->GetNowModelMatrix(), mDeltaTime * speed, glm::vec3(-1.0, 1.0, 0.0)));
+		// item.second->UpdateRenderItem(glm::rotate(item.second->GetNowModelMatrix(), mDeltaTime * speed, glm::vec3(-1.0, 1.0, 0.0)));
 	}
 }
 
@@ -108,17 +111,18 @@ bool Scene::WindowsInit()
 	mWindow =
 		glfwCreateWindow(mWidth, mHeight, (mName + " FPS: 0.00").c_str(), nullptr, nullptr);
 	glfwGetWindowSize(mWindow, &mWidth, &mHeight);
-	if (mWindow == nullptr) {
+	if (mWindow == nullptr)
+	{
 		LOG_ERROR("Fail to create GLFW window");
 		glfwTerminate();
 		return false;
 	}
 	glfwMakeContextCurrent(mWindow);
-	//glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	// glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glewInit();
-	//glfwSetCursorPos(mWindow, mWidth / 2, mHeight / 2);
-	mLastMousePoint[0] = mWidth / 2;
-	mLastMousePoint[1] = mHeight / 2;
+	// glfwSetCursorPos(mWindow, mWidth / 2, mHeight / 2);
+	mLastMousePoint[0] = double(mWidth) / 2;
+	mLastMousePoint[1] = double(mHeight) / 2;
 	LOG_INFO("Succeed to create GLFW window: " + mName);
 	return true;
 }
@@ -134,27 +138,27 @@ void Scene::CreateShaders()
 void Scene::CreateModels()
 {
 	std::shared_ptr<Model> test_cube_model = std::make_shared<Model>();
-	test_cube_model->LoadModel("Resources/tree/3d66.com_17439735.obj");
-	mModelList["Tree"] = test_cube_model;
-	LOG_INFO("Create model: Tree");
+	test_cube_model->LoadModel("Resources/SashaDragon/SashaDragon.fbx");
+	mModelList["Dragon"] = test_cube_model;
+	LOG_INFO("Create model: Dragon");
 }
 
 void Scene::CreateRenderItems()
 {
 	std::string name_of_model;
-	for (auto& model : mModelList)
+	for (auto &model : mModelList)
 	{
 		name_of_model = model.first;
-		mRenderItemList[name_of_model] = std::make_unique<RenderItem>(model.second, glm::mat4x4(0.3f));
+		mRenderItemList[name_of_model] = std::make_unique<RenderItem>(model.second);
 		LOG_INFO("Create render item: " + name_of_model);
 	}
-	//mRenderItemList["cube1"] = std::make_unique<RenderItem>(cube_model, glm::mat4x4(1.0f));
-	//mRenderItemList["cube2"] = std::make_unique<RenderItem>(cube_model, glm::translate(glm::mat4x4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
+	// mRenderItemList["cube1"] = std::make_unique<RenderItem>(cube_model, glm::mat4x4(1.0f));
+	// mRenderItemList["cube2"] = std::make_unique<RenderItem>(cube_model, glm::translate(glm::mat4x4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 }
 
 void Scene::CreateLights()
 {
-	//mLightList.push_back(std::make_unique<PointLight>("pLight0", glm::vec3(0.2f, 1.0f, 2.0f)));
+	// mLightList.push_back(std::make_unique<PointLight>("pLight0", glm::vec3(0.2f, 1.0f, 2.0f)));
 	mLightList.push_back(std::make_unique<ParallelLight>("pLight0", glm::vec3(-1.0f, -1.0f, -1.0f)));
 	LOG_INFO("Create a light");
 	mLightList.back()->DebugInfo();
@@ -162,11 +166,11 @@ void Scene::CreateLights()
 
 void Scene::CreateCamera()
 {
-	glm::vec3 pos = glm::vec3(-3, 0, 4);
+	glm::vec3 pos = glm::vec3(5, 0, 0);
 	constexpr float l = pos.length();
 	float phi = asin(pos.y / l) * 180.0f / 3.14159265358979f;
 	float theta = 0;
-	if (abs(pos.x) > 1e-6)
+	if (std::abs(pos.x) > 1e-6)
 	{
 		theta = atan(pos.z / pos.x) * 180.0f / 3.14159265358979f;
 		if (pos.x < 0)
@@ -183,7 +187,6 @@ void Scene::CreateCamera()
 		theta = -90.0f;
 	}
 	mCamera = Camera(pos, theta, phi);
-
 }
 
 void Scene::OnResize(int width, int height)
@@ -202,9 +205,9 @@ void Scene::OnMouseMove(double xpos, double ypos)
 	}
 	mCamera.TurnLeftRight((xpos - mLastMousePoint[0]) / mWidth * 360.0 * 0.5);
 	mCamera.TurnUpDown((ypos - mLastMousePoint[1]) / mHeight * 180.0 * 0.5);
-	//mLastMousePoint[0] = xpos;
-	//mLastMousePoint[1] = ypos;
-	glfwSetCursorPos(mWindow, mWidth / 2, mHeight / 2);
+	// mLastMousePoint[0] = xpos;
+	// mLastMousePoint[1] = ypos;
+	glfwSetCursorPos(mWindow, double(mWidth) / 2, double(mHeight) / 2);
 }
 
 void Scene::OnMouseScroll(double xoffset, double yoffset)

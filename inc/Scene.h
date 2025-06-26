@@ -5,6 +5,7 @@
 #include "Light.h"
 #include <iostream>
 #include <GLFW/glfw3.h>
+#include <unordered_map>
 
 #define MAXLIGHTNUM 16
 
@@ -29,7 +30,7 @@ private:
 	void OnMouseMove(double xpos, double ypos);
 	void OnMouseScroll(double xoffset, double yoffset);
 	void OnKeyDown();
-private:
+protected:
 	std::string mName;
 	std::unordered_map<std::string, std::shared_ptr<Model>> mModelList;
 	std::unordered_map<std::string, std::unique_ptr<RenderItem>> mRenderItemList;
@@ -37,6 +38,7 @@ private:
 	std::vector <std::unique_ptr<Light>> mLightList;
 	std::unordered_map<std::string, std::shared_ptr<ADS_Material>> mMaterialList;
 	std::unordered_map<std::string, Shader> mShaderList;
+	std::unordered_map<std::string, unsigned int> mProgramList;
 	unsigned int mProgramID;
 
 	float mCurrentTime;
