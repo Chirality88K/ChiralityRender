@@ -7,7 +7,7 @@
             "request": "launch",
             "program": "${workspaceRoot}/build/linux_debug/ChiralityRender_Debug",
             "args": [],
-            "cwd": "${workspaceFolder}/build",
+            "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",

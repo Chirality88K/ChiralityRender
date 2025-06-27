@@ -30,13 +30,6 @@ private:
 	float mRoughness;//range 0-1
 };
 
-struct TexturePicture
-{
-	unsigned int mID;
-	std::string mPath;
-	std::string mType;
-};
-
 class ADS_Material
 {
 public:

@@ -73,6 +73,10 @@ bool Scene::LinkShader() const
 		return false;
 	}
 	LOG_INFO("Succeed to link shaders");
+	for (const auto &it : mShaderList)
+	{
+		it.second.DeleteShader();
+	}
 	return true;
 }
 
@@ -138,9 +142,9 @@ void Scene::CreateShaders()
 void Scene::CreateModels()
 {
 	std::shared_ptr<Model> test_cube_model = std::make_shared<Model>();
-	test_cube_model->LoadModel("Resources/SashaDragon/SashaDragon.fbx");
-	mModelList["Dragon"] = test_cube_model;
-	LOG_INFO("Create model: Dragon");
+	test_cube_model->LoadModel("Resources/minecraft-creeper/source/model.gltf");
+	mModelList["creeper"] = test_cube_model;
+	LOG_INFO("Create model: creeper");
 }
 
 void Scene::CreateRenderItems()
@@ -166,7 +170,7 @@ void Scene::CreateLights()
 
 void Scene::CreateCamera()
 {
-	glm::vec3 pos = glm::vec3(5, 0, 0);
+	glm::vec3 pos = glm::vec3(10, 0, 0);
 	constexpr float l = pos.length();
 	float phi = asin(pos.y / l) * 180.0f / 3.14159265358979f;
 	float theta = 0;

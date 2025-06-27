@@ -18,6 +18,7 @@ RenderItem::RenderItem(std::shared_ptr<Model> model) noexcept
 	model->GetBox().GetCenter(center);
 	glm::mat4x4 matrix = glm::translate(glm::mat4x4(1.0), glm::vec3(-center[0], -center[1], -center[2]));
 	double ratio = (std::min)(1.0 / model->GetBox().GetWidth(), 1.0 / model->GetBox().GetHeight());
+	ratio = (std::min)(ratio, 1.0 / model->GetBox().GetLength());
 	mModelMatrix = glm::mat4x4(ratio * 10.0) * matrix;
 	mModelMatrix = glm::rotate(mModelMatrix, PI / 2, glm::vec3(-1.0, 0.0, 0.0));
 }
